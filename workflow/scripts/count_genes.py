@@ -34,6 +34,7 @@ class CountRecord:
     contig_gene: str
     group_count: int
     aggregated_cluster_string: str
+    total_reads: int
 
 
 def prepare_barcode_table(db_path: str):
@@ -86,17 +87,16 @@ def create_count_record(dict_pair: Tuple[BarcodeGene, Dict[bytes, int]]) -> Coun
         cluster_count = 0
         for umi in cluster:
             cluster_count += umi_dict[umi]
-        cluster_string = f"{cell_barcode}\t{cluster_representative.decode()}\t{contig_gene}\t{cluster_count}\n"
+        cluster_string = f"{barcode_info.barcode}\t{cluster_representative.decode()}\t{contig_gene}\t{cluster_count}\n"
         return cluster_string, cluster_count
     contig_gene = f"{barcode_info.contig}:{barcode_info.gene}"
     clusterer = umi_tools.UMIClusterer(cluster_method="directional")
     clustered_umis: List[List[bytes]] = clusterer(umi_dict, threshold=1)
     cluster_info = [prepare_cluster_info(cluster) for cluster in clustered_umis]
     aggregated_cluster_string = "".join([x[0] for x in cluster_info])
+    read_count_total = sum(x[1] for x in cluster_info)
     group_count = len(clustered_umis)
-    total_reads_in_group = sum(dict_pair[1].values())
-    print(f"Group {barcode_info.barcode}, {contig_gene} with {total_reads_in_group} reads: {group_count}\n{aggregated_cluster_string}")
-    return CountRecord(barcode_info.barcode, contig_gene, group_count, aggregated_cluster_string)
+    return CountRecord(barcode_info.barcode, contig_gene, group_count, aggregated_cluster_string, read_count_total)
 
 
 
@@ -171,12 +171,13 @@ with open(f"results/{sample}/{sample}_umi_count_table.txt", "w") as umi_file:
         umi_file.write(umi_group.aggregated_cluster_string)
 
 
-res_frame = pd.DataFrame.from_records(((res.barcode, res.contig_gene, res.group_count) for res in res_list), columns=["Cell Barcode","contig_gene","count"])
+res_frame = pd.DataFrame.from_records(((res.barcode, res.contig_gene, res.group_count, res.total_reads) for res in res_list), columns=["Cell Barcode","contig_gene","count", "read_count"])
 
 # Note: The genomic features may be on the gene, not operon level, but we keep this naming for historical reasons
 n_operons = res_frame["count"].sum()
 mean_operons = res_frame["count"].mean()
 max_operons = res_frame["count"].max()
+total_supporting_reads = res_frame["read_count"].sum()
 
 
 (res_frame.loc[lambda df: df["count"] > threshold].
@@ -202,9 +203,10 @@ summary_logger.info(f"of which {selected_count} ({round_percentage(read_count, s
 summary_logger.info(f"of which {aligned_count} ({round_percentage(selected_count, aligned_count)}%) reads aligned to the reference genome")
 summary_logger.info(f"of which {unambiguous_count} ({round_percentage(aligned_count, unambiguous_count)}%) reads aligned unambiguously to the reference genome")
 summary_logger.info(f"of which {feature_determined} ({round_percentage(unambiguous_count, feature_determined)}%) reads did match a genomic feature")
-summary_logger.info(f"Total number of UMI groups deduplicated: {len(cell_UMI_count)}")
+summary_logger.info(f"Total number of barcode-gene groups deduplicated: {len(cell_UMI_count)}")
 summary_logger.info(f"Total number of unique UMIs: {n_operons}")
-summary_logger.info(f"Mean number of unique UMIs per UMI group: {mean_operons}")
-summary_logger.info(f"Max number of unique UMIs per UMI group: {max_operons}")
+summary_logger.info(f"Mean number of unique UMIs per barcode-gene group: {mean_operons}")
+summary_logger.info(f"Max number of unique UMIs per barcode-gene group: {max_operons}")
+summary_logger.info(f"Total number of supporting reads (reads assigned to two gene-barcode groups counted twice): {total_supporting_reads}")
 
 log_handle.close()
