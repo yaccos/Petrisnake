@@ -28,6 +28,13 @@ class BarcodeGene:
     gene: str
     contig: str
 
+@dataclass(frozen=True)
+class CountRecord:
+    barcode: str
+    contig_gene: str
+    group_count: int
+    aggregated_cluster_string: str
+
 
 def prepare_barcode_table(db_path: str):
     con = sqlite3.connect(db_path)
@@ -72,16 +79,8 @@ def get_alignment_status(read: pysam.AlignedSegment):
     gene = get_gene(read)
     return contig, gene
 
-def count_umis(umi_dict: Dict[bytes, int]):
-    clusterer = umi_tools.UMIClusterer(cluster_method="directional")
-    clustered_umis = clusterer(umi_dict, threshold=1)
-    return len(clustered_umis)
-
-
-
-def create_count_record(dict_pair: Tuple[BarcodeGene, Dict[bytes, int]]):
+def create_count_record(dict_pair: Tuple[BarcodeGene, Dict[bytes, int]]) -> CountRecord:
     barcode_info, umi_dict = dict_pair
-    group_count = 0
     def prepare_cluster_info(cluster):
         cluster_representative = cluster[0]
         cluster_count = 0
@@ -94,8 +93,11 @@ def create_count_record(dict_pair: Tuple[BarcodeGene, Dict[bytes, int]]):
     clustered_umis: List[List[bytes]] = clusterer(umi_dict, threshold=1)
     cluster_info = [prepare_cluster_info(cluster) for cluster in clustered_umis]
     aggregated_cluster_string = "".join([x[0] for x in cluster_info])
-    group_count = sum(x[1] for x in cluster_info)
-    return (barcode_info.barcode, contig_gene, group_count, aggregated_cluster_string)
+    group_count = len(clustered_umis)
+    total_reads_in_group = sum(dict_pair[1].values())
+    print(f"Group {barcode_info.barcode}, {contig_gene} with {total_reads_in_group} reads: {group_count}\n{aggregated_cluster_string}")
+    return CountRecord(barcode_info.barcode, contig_gene, group_count, aggregated_cluster_string)
+
 
 
 threshold = snakemake.params["threshold"]
@@ -166,10 +168,10 @@ logging.info(f"Preparing results")
 with open(f"results/{sample}/{sample}_umi_count_table.txt", "w") as umi_file:
     umi_file.write("Cell Barcode\tUMI\tcontig:gene\ttotal_reads\n")
     for umi_group in res_list:
-        cell_barcode, contig_gene, _, aggregated_cluster_string = umi_group
-        umi_file.write(aggregated_cluster_string)
+        umi_file.write(umi_group.aggregated_cluster_string)
 
-res_frame = pd.DataFrame.from_records(((res[0], res[1], res[2]) for res in res_list), columns=["Cell Barcode","contig_gene","count"])
+
+res_frame = pd.DataFrame.from_records(((res.barcode, res.contig_gene, res.group_count) for res in res_list), columns=["Cell Barcode","contig_gene","count"])
 
 # Note: The genomic features may be on the gene, not operon level, but we keep this naming for historical reasons
 n_operons = res_frame["count"].sum()
