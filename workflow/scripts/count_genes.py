@@ -94,8 +94,6 @@ def create_count_record(dict_pair: Tuple[BarcodeGene, Dict[bytes, int]]) -> Coun
     cluster_info = [prepare_cluster_info(cluster) for cluster in clustered_umis]
     aggregated_cluster_string = "".join([x[0] for x in cluster_info])
     group_count = len(clustered_umis)
-    total_reads_in_group = sum(dict_pair[1].values())
-    print(f"Group {barcode_info.barcode}, {contig_gene} with {total_reads_in_group} reads: {group_count}\n{aggregated_cluster_string}")
     return CountRecord(barcode_info.barcode, contig_gene, group_count, aggregated_cluster_string)
 
 
