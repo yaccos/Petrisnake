@@ -59,7 +59,7 @@ Annotates the alignments with their corresponding features (i.e. genes, operons)
 The final stage of the pipeline. It is served by a Python script which processes the data in three stages:
 
 * Scans through the feature annotated alignments and compares with the barcode table. Any alignment which is not a primarily alignment of a read, any read not aligning to the reference genome, or any read for which no feature could be found, are discarded. Additionally, reads which align ambiguously, this is, with the highest alignment score to two or more genomic regions, are also discared with the expection of rRNA features for which ambiguously alignments are allowed. The read's barcode is looked up to see if it matches one of the selection reads from `select_reads`. For the reads which pass all these filters, the cell barcode, the UMI and gene annotation is recorded.
-* Deduplicates UMI groups, this is: For each combination of cell barcode and gene, the unique UMIs are extracted and counted. For this process [UMI-tools](https://github.com/CGATOxford/UMI-tools) `directional` algorithm is used for fault tolerance.
+* Deduplicates gene-barcode groups, this is: For each combination of cell barcode and gene, the unique UMIs are extracted and counted. For this process [UMI-tools](https://github.com/CGATOxford/UMI-tools) `directional` algorithm is used for fault tolerance.
 * Creates the gene count table and UMI count table which are the principal end products of the pipeline.
 
 
