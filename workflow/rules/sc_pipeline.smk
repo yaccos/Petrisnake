@@ -20,7 +20,7 @@ rule demultiplex:
     log:
         "logs/{sample}/demultiplex.log",
     container:
-        "docker://yaccos/posdemux:0.99.8"
+        "docker://yaccos/posdemux:0.99.11"
     script:
         "../scripts/demultiplexer.R"
 
@@ -36,7 +36,7 @@ rule create_bc_plots:
     log:
         "logs/{sample}/bc_plots.log",
     container:
-        "docker://yaccos/posdemux:0.99.8"
+        "docker://yaccos/posdemux:0.99.11"
     script:
         "../scripts/create_bc_plots.R"
 
