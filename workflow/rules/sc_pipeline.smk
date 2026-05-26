@@ -17,6 +17,7 @@ rule demultiplex:
         freq_table="results/{sample}/{sample}_frequency_table.txt",
     params:
         chunk_size=lambda wildcards: processed_config[wildcards.sample]["chunk_size"],
+        adapter_sequence="GGTCCTTGGCTTCGC",
     log:
         "logs/{sample}/demultiplex.log",
     container:

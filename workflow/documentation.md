@@ -14,7 +14,7 @@ Completly separately from the other jobs `fastqc` is run on all input files, the
 `quality_trim` is a `cutadapt` command filtering out low-quality reads pairs and reads being too short. The rule is invoked once per input file pair and hence gives a pair of output files per lane. The output filenames are `results/<sample>/<sample>_QF_<lane>_R1.fastq` and `results/<sample>/<sample>_QF_<lane>_R2.fastq`. The `R1` files are fed into the demultiplexer and are typically never seen by the user, whereas the `R2` files are to be alignment and are hence kept until the `all` rule completes the alignment.
 
 ## `demultiplex`
-In this step, the `posDemux` package demultiplexes the forward reads for each sample. If the sample has multiple lanes, the demultiplexer sequentially streams all the lane files in the same rule invokation.
+In this step, the `posDemux` package demultiplexes the forward reads for each sample. Before demultiplexing, the workflow filters each lane file and keeps only reads containing the bc3 to bc2 adapter sequence `GGTCCTTGGCTTCGC`. If the sample has multiple lanes, the demultiplexer sequentially streams all the lane files in the same rule invokation.
 
 ## `all`
 
