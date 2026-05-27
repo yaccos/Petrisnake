@@ -76,7 +76,7 @@ loader <- function(state) {
     state$reads_without_adapter  <- state$reads_without_adapter + length(chunk_without_adapter)
     list(
         state = state,
-        sequences = chunk,
+        sequences = chunk_without_adapter,
         should_terminate = FALSE
     )
 }
