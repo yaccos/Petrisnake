@@ -74,8 +74,5 @@ Finally, provide the determined values in config/config.yaml"
 
 rule all:
     input:
-        fastqc_output,
-        knee_plot,
-        histogram,
-        gene_matrix_output,
-        umi_table_output,
+        bc_table_output,
+        freq_table_output
