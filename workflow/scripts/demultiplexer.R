@@ -107,7 +107,7 @@ archiver <- function(state, filtered_res) {
 
     readr::write_tsv(
         x = chunk_table,
-        file = custom_output_table,
+        file = output_table_file,
         append = append,
         col_names = !append,
         eol = "\n"
@@ -124,12 +124,6 @@ archiver <- function(state, filtered_res) {
     state
 }
 
-
-
-callbacks <- streaming_callbacks(input_file = input_file,
-                                 output_table_file = output_table_file,
-                                 chunk_size = chunk_size,
-                                 verbose = TRUE)
 
 streaming_res <- rlang::exec(streaming_demultiplex, state_init = state_init,
                             loader = loader, archiver = archiver,
