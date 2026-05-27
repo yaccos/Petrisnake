@@ -72,7 +72,7 @@ loader <- function(state) {
         return(final_res)
     }
     state$total_reads <- state$total_reads + n_reads_in_chunk
-    chunk_without_adapter <- Biostrings::vcountPattern(bc3_to_bc2_adapter, chunk, max.mismatch = 1L) |> (\(x) chunk[x == 0L])
+    chunk_without_adapter <- Biostrings::vcountPattern(bc3_to_bc2_adapter, chunk, max.mismatch = 1L) |> (\(x) chunk[x == 0L])()
     state$reads_without_adapter  <- state$reads_without_adapter + length(chunk_without_adapter)
     list(
         state = state,
