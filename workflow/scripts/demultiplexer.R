@@ -52,7 +52,9 @@ loader <- function(state) {
                 input_file, n = chunk_size
                 )
     }
-    chunk <- ShortRead::yield(state$istream)  |> ShortRead::sread()
+    raw_chunk <- ShortRead::yield(state$istream)  
+    chunk <- ShortRead::sread()
+    names(chunk) <- id(raw_chunk) |> (\(name) sub(" .*$", "", name))()
     n_reads_in_chunk <- length(chunk)
 
 
@@ -95,8 +97,6 @@ archiver <- function(state, filtered_res) {
     }
     barcode_table <- as.data.frame(barcode_matrix)
     read_name_table <- data.frame(read = read_names)
-    head(barcode_table)  |> print()
-    head(read_name_table)  |> print()
     chunk_table <- cbind(read_name_table, barcode_table)
     if (!state$output_table_initialized) {
         append <- FALSE
