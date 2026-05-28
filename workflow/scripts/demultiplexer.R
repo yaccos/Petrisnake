@@ -53,7 +53,7 @@ loader <- function(state) {
                 )
     }
     raw_chunk <- ShortRead::yield(state$istream)  
-    chunk <- ShortRead::sread()
+    chunk <- ShortRead::sread(raw_chunk)
     names(chunk) <- id(raw_chunk) |> (\(name) sub(" .*$", "", name))()
     n_reads_in_chunk <- length(chunk)
 
