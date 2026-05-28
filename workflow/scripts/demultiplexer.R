@@ -133,7 +133,7 @@ streaming_res <- rlang::exec(streaming_demultiplex, state_init = state_init,
 final_state  <- streaming_res$state_final
 total_reads  <- final_state$total_reads
 reads_without_adapter <- final_state$reads_without_adapter
-lacking_adapter_percentage  <- round(total_reads / reads_without_adapter * 100, 2L)
+lacking_adapter_percentage  <- round(reads_without_adapter / total_reads * 100, 2L)
 demultiplexed_reads  <- final_state$demultiplexed_reads
 demultiplexing_success  <- round(demultiplexed_reads / reads_without_adapter * 100, 2L)
 
