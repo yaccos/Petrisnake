@@ -137,19 +137,17 @@ lacking_adapter_percentage  <- round(reads_without_adapter / total_reads * 100, 
 demultiplexed_reads  <- final_state$demultiplexed_reads
 demultiplexing_success  <- round(demultiplexed_reads / reads_without_adapter * 100, 2L)
 
-
-glue(
-    "Read of total of {total_reads} reads,
-    of which {reads_without_adapter} ({lacking_adapter_percentage}%) lacked adapter"
-    ) |> message()
-
 freq_table  <- streaming_res$freq_table
 log_progress("Writing frequency table...")
 write.table(x = freq_table, file = output_freq_table, quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
 log_progress("DONE")
 cat("\n")
+glue(
+    "Read of total of {total_reads} reads,
+    of which {reads_without_adapter} ({lacking_adapter_percentage}%) lacked adapter"
+    ) |> message()
+cat("\n")
 print(streaming_res$summary_res)
-
 saveRDS(object = bc_frame, file = output_bc_frame, compress = FALSE)
 
 sink(type="message")
