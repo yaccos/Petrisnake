@@ -86,7 +86,6 @@ state_init <- list(
 )
 
 archiver <- function(state, filtered_res) {
-    message("Hallo!")
     barcode_matrix <- filtered_res$demultiplex_res$assigned_barcodes
     barcode_names <- colnames(barcode_matrix)
     read_names <- rownames(barcode_matrix)
@@ -96,7 +95,8 @@ archiver <- function(state, filtered_res) {
     }
     barcode_table <- as.data.frame(barcode_matrix)
     read_name_table <- data.frame(read = read_names)
-
+    head(barcode_table)  |> print()
+    head(read_name_table)  |> print()
     chunk_table <- cbind(read_name_table, barcode_table)
     if (!state$output_table_initialized) {
         append <- FALSE
