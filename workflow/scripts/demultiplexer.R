@@ -51,6 +51,7 @@ loader <- function(state) {
         state$istream <- ShortRead::FastqStreamer(
                 input_file, n = chunk_size
                 )
+        message("Hallo!")
     }
     chunk <- ShortRead::yield(state$istream)  |> ShortRead::sread()
     n_reads_in_chunk <- length(chunk)
