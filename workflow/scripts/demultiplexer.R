@@ -48,13 +48,11 @@ names(bc_frame$stringset) <- bc_frame$bc_name
 loader <- function(state) {
     if (!state$output_table_initialized) {
         message("Starting to load sequences")
+        state$istream <- ShortRead::FastqStreamer(
+                input_file, n = chunk_size
+                )
     }
-    chunk <- Biostrings::readDNAStringSet(
-        filepath = input_file,
-        format = "fastq",
-        nrec = chunk_size,
-        skip = state$total_reads
-    )
+    chunk <- ShortRead::yield(state$istream)  |> ShortRead::sread()
     n_reads_in_chunk <- length(chunk)
 
 
@@ -69,6 +67,7 @@ loader <- function(state) {
             should_terminate = TRUE
         )
         message("Done demultiplexing")
+        close(state$istream)
         return(final_res)
     }
     state$total_reads <- state$total_reads + n_reads_in_chunk
@@ -133,7 +132,7 @@ streaming_res <- rlang::exec(streaming_demultiplex, state_init = state_init,
 final_state  <- streaming_res$state_final
 total_reads  <- final_state$total_reads
 reads_without_adapter <- final_state$reads_without_adapter
-lacking adapter_percentage  <- round(total_reads / reads_without_adapter * 100, 2L)
+lacking_adapter_percentage  <- round(total_reads / reads_without_adapter * 100, 2L)
 demultiplexed_reads  <- final_state$demultiplexed_reads
 demultiplexing_success  <- round(demultiplexed_reads / reads_without_adapter * 100, 2L)
 
@@ -141,7 +140,7 @@ demultiplexing_success  <- round(demultiplexed_reads / reads_without_adapter * 1
 glue(
     "Read of total of {total_reads} reads,
     of which {reads_without_adapter} ({lacking_adapter_percentage}%) lacked adapter"
-    )
+    ) |> message()
 
 freq_table  <- streaming_res$freq_table
 log_progress("Writing frequency table...")
