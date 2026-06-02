@@ -11,4 +11,4 @@ wait
 
 python $script_dir/sc_pipeline_15_generic_v2.py ${sample_full} 1
 chmod +x $script_dir/pipeline_v2_generic.sh
-$script_dir/pipeline_v2_generic.sh ${sample} $bc_cutoff GCF_000005845.2/GCF_000005845.2_ASM584v2_genomic.fna  GCF_000005845.2/genomic.gtf ${sample}
+$script_dir/pipeline_v2_generic.sh ${sample} $bc_cutoff GCF_000005845.2/GCF_000005845.2_ASM584v2_genomic.fna  GCF_000005845.2/genomic.gtf ${sample}_bwa_mem

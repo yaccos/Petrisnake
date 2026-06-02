@@ -7,7 +7,8 @@ Modifications carried out by Jakob Peder Pettersen:
 * Made cosmetical changes to the pipeline scripts to make it more readable, utilizing f-strings in Python. The functionality should be the same.
 * Changed the dataset being used to SRR28148450 which stems from the paper by Yan et al. 2024
 * Changed featureCounts_directional_5.py to use the same reference annotation settings as Yan et al.
-Last updated: 28-11-2025
+* Changed the aligner from bwa aln to bwa mem
+Last updated: 02-06-2026
 
 Dependencies:
 python 3.12.12

@@ -12,7 +12,6 @@ else:
 template = sys.argv[2]
 table = open(ID+'_selected_cumulative_frequency_table.txt')
 
-os.system(f'mkdir {sample}_bwa_sai')
 os.system(f'mkdir {sample}_bwa_sam')
 R2_list = {}
 R2_list[0] = ''
@@ -31,17 +30,17 @@ for line in table:
         group +=1
         R2_list[group] = ''
 for group in R2_list:
-    bwa_aln_command = (
+    bwa_mem_command = (
         f'echo "{R2_list[group]}" | time parallel --bar --files --results '
-        f'{sample}_bwa_sai -j10 bwa aln -n 0.06 {template} '
+        f'{sample}_bwa_sam -j10 bwa mem -a -k 19 -Y {template} '
         f'{sample}_2nd_trim/{ID}_{{}}_2trim.fastq'
     )
-    os.system(bwa_aln_command)
-    bwa_samse_command = (
-        f'echo "{R2_list[group]}" | time parallel --bar --files --results '
-        f'{sample}_bwa_sam -j10 bwa samse -n 14 {template} '
-        f'{sample}_bwa_sai/1/{{}}/stdout {sample}_2nd_trim/{ID}_{{}}_2trim.fastq'
-    )
-    os.system(bwa_samse_command)
+    os.system(bwa_mem_command)
+#     bwa_samse_command = (
+#         f'echo "{R2_list[group]}" | time parallel --bar --files --results '
+#         f'{sample}_bwa_sam -j10 bwa samse -n 14 {template} '
+#         f'{sample}_bwa_sai/1/{{}}/stdout {sample}_2nd_trim/{ID}_{{}}_2trim.fastq'
+#     )
+#     os.system(bwa_samse_command)
 
-os.system(f'rm -r {sample}_bwa_sai/')
+# os.system(f'rm -r {sample}_bwa_sai/')
