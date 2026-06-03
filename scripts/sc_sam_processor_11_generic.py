@@ -50,6 +50,10 @@ for cell in table:
                                         contig = 'ambiguous'
                     else:
                         contig = 'ambiguous'
+            else:
+                # If there is not X0-tag, we assume it is a secondary or failed alignment, so we discard it,
+                # the value is just a placeholder
+                num_matches = 2
             if 'XT:Z' in line:
                 gene = line[line.find('XT:Z:')+5:len(line)+1]
                 gene = gene.split('\t')[0].split('\n')[0]

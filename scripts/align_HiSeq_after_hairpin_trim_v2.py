@@ -1,5 +1,3 @@
-## Edited so maximum edit distance for bwa aln is 1
-
 import sys
 import os
 
@@ -36,11 +34,3 @@ for group in R2_list:
         f'{sample}_2nd_trim/{ID}_{{}}_2trim.fastq'
     )
     os.system(bwa_mem_command)
-#     bwa_samse_command = (
-#         f'echo "{R2_list[group]}" | time parallel --bar --files --results '
-#         f'{sample}_bwa_sam -j10 bwa samse -n 14 {template} '
-#         f'{sample}_bwa_sai/1/{{}}/stdout {sample}_2nd_trim/{ID}_{{}}_2trim.fastq'
-#     )
-#     os.system(bwa_samse_command)
-
-# os.system(f'rm -r {sample}_bwa_sai/')
