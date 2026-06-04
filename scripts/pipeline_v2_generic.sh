@@ -40,12 +40,12 @@ then
 	python $dir/sc_sam_processor_11_generic.py 0 ${custom_name} ${sample} # generates a single file of collapsed UMIs (output suffix is _filtered_mapped_UMIs.txt})
 	python $dir/make_matrix_mixed_species.py ${custom_name}_v11_threshold_0 # make matrix from filtered UMIs
 	## Below are cleanup steps - comment out to see intermediate files
-	rm -r ${sample}/${sample}*QF*.fastq
-	rm -r ${sample}_R2_trimmed #fastq files after trim_R2_v4
-	rm -r ${sample}_2nd_trim
-	rm -r ${sample}_bwa_sam # sam files after align_v4
-	rm -r ${custom_name}_no_XT # sam and bam files without XT tag (generated during featureCounts_directional_5)
-	rm -r ${custom_name}_FC # bam files after feature counts (featureCounts_directional_5)
-	rm -r ${custom_name}_FC_directional_grouped_2 # bam files after umi tools group (featureCounts_directional_5)
+	# rm -r ${sample}/${sample}*QF*.fastq
+	# rm -r ${sample}_R2_trimmed #fastq files after trim_R2_v4
+	# rm -r ${sample}_2nd_trim
+	# rm -r ${sample}_bwa_sam # sam files after align_v4
+	# rm -r ${custom_name}_no_XT # sam and bam files without XT tag (generated during featureCounts_directional_5)
+	# rm -r ${custom_name}_FC # bam files after feature counts (featureCounts_directional_5)
+	# rm -r ${custom_name}_FC_directional_grouped_2 # bam files after umi tools group (featureCounts_directional_5)
 	echo $msg
 fi
