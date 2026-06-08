@@ -14,6 +14,16 @@ threshold = int(sys.argv[1])
 output = open(f'{sample}_v{version}_threshold_{threshold}_filtered_mapped_UMIs.txt', 'w')
 output.write('Cell Barcode\tUMI\tcontig:gene\ttotal_reads\n')
 
+def is_ambiguous(line) -> bool:
+    columns = line.split("\t")
+    mapping_quality = int(columns[4])
+    if mapping_quality == 0:
+        return True
+    elif "SA:Z" in line:
+        return True
+    else:
+        return False
+
 for cell in table:
     cell_barcode = cell.split('\t')[1]
     R2_file_name = f"{ID}_R2{cell_barcode[cell_barcode.find('_bc1_'):]}"
@@ -38,27 +48,11 @@ for cell in table:
         else:
             edit_dist = line[line.find('NM:i:')+5:line.find('NM:i:')+6]
             contig = line.split('\t')[2]
-            if 'X0:i' in line:
-                num_matches = int(line[line.find('X0:i:')+5:line.find('X0:i:')+7])
-                if num_matches > 1:
-                    if 'XA:Z' in line:
-                        match_list = line[line.find('XA:Z:')+5:len(line)].split('\t')[0].split(';')
-                        for entry in match_list:
-                            if entry != '':
-                                if entry.split(',')[3] == edit_dist:
-                                    if entry.split(',')[0] not in contig:
-                                        contig = 'ambiguous'
-                    else:
-                        contig = 'ambiguous'
-            else:
-                # If there is not X0-tag, we assume it is a secondary or failed alignment, so we discard it,
-                # the value is just a placeholder
-                num_matches = 2
             if 'XT:Z' in line:
                 gene = line[line.find('XT:Z:')+5:len(line)+1]
                 gene = gene.split('\t')[0].split('\n')[0]
                 gene = gene.split('\t')[0]
-                if ('rRNA' not in gene) & (num_matches > 1):
+                if ('rRNA' not in gene) and (is_ambiguous(line)):
                     gene = 'ambiguous'
             else:
                 gene = 'no_feature'
