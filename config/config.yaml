@@ -9,7 +9,7 @@ gene_id_attribute: name
 streaming_chunk_size: 200000
 samples:
   1_06SaEc:
-    prefix: GSE141018
+    prefix: GSE141018/
     bc_cutoff:
     lanes:
       L1: SRR10533473
