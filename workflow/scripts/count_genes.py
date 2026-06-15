@@ -7,8 +7,8 @@ import multiprocessing
 import logging
 import sqlite3
 import sys
-from snakemake.script import snakemake
 
+# This will work fine, the snakemake object already exists globally
 log_file = snakemake.log[0]
 log_handle  = open(log_file, "w")
 sys.stdout = log_handle
