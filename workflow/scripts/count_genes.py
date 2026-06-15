@@ -7,8 +7,8 @@ import multiprocessing
 import logging
 import sqlite3
 import sys
-from snakemake.script import snakemake
 
+# This will work fine, the snakemake object already exists globally
 log_file = snakemake.log[0]
 log_handle  = open(log_file, "w")
 sys.stdout = log_handle
@@ -207,6 +207,6 @@ summary_logger.info(f"Total number of barcode-gene groups deduplicated: {len(cel
 summary_logger.info(f"Total number of unique UMIs: {n_operons}")
 summary_logger.info(f"Mean number of unique UMIs per barcode-gene group: {mean_operons}")
 summary_logger.info(f"Max number of unique UMIs per barcode-gene group: {max_operons}")
-summary_logger.info(f"Total number of supporting reads (reads assigned to two gene-barcode groups counted twice): {total_supporting_reads}")
+summary_logger.info(f"Total number of supporting reads (reads assigned to two barcode-gene groups counted twice): {total_supporting_reads}")
 
 log_handle.close()
