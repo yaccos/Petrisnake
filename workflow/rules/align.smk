@@ -38,4 +38,4 @@ rule bwa_align:
     conda:
         "../envs/bwa.yml"
     shell:
-        "bwa mem -a -k 12 -Y -t {threads} {input.genome}  {input.reads} > {output} 2> {log}"
+        "bwa mem -a -k 8 -Y -t {threads} {input.genome}  {input.reads} > {output} 2> {log}"
