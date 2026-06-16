@@ -10,6 +10,6 @@ streaming_chunk_size: 200000
 samples:
   SA_9h:
     prefix: GSE260457/
-    bc_cutoff:
+    bc_cutoff: 8000
     lanes:
       L1: SRR28148452
