@@ -2,14 +2,14 @@ prefix: resources/
 suffix: .fastq
 forward_suffix: _1
 reverse_suffix: _2
-reference_genome: GCF_000005845.2/GCF_000005845.2_ASM584v2_genomic.fna
-reference_annotation: GCF_000005845.2/genomic.gtf
-feature_tag: CDS  
-gene_id_attribute: gene_id
+reference_genome: GCF_000756205.1/GCF_000756205.1_ASM75620v1_genomic.fna
+reference_annotation: GCF_000756205.1/genomic.gtf
+feature_tag: gene  
+gene_id_attribute: gene
 streaming_chunk_size: 200000
 samples:
-  EC_3h_deep:
+  SA_9h:
     prefix: GSE260457/
-    bc_cutoff: 60000
+    bc_cutoff:
     lanes:
-      L1: SRR28148450
+      L1: SRR28148452
