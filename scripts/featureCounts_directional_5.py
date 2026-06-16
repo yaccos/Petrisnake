@@ -22,7 +22,7 @@ def pipeline(sample,ID,name,gff):
     os.system(samtools_index_command_1)
     
     featureCounts_command = (
-        f"featureCounts -t 'CDS' -g 'gene_id' -s 1 -a {gff} -o {sample}_FC/{R2_file_name}_FC "
+        f"featureCounts -t 'gene' -g 'Name' -s 1 -a {gff} -o {sample}_FC/{R2_file_name}_FC "
         f"-R BAM {sample}_no_XT/{R2_file_name}_no_XT_sorted.bam"
     )
     os.system(featureCounts_command)
