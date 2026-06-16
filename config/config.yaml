@@ -5,7 +5,7 @@ reverse_suffix: _2
 reference_genome: GCF_000756205.1/GCF_000756205.1_ASM75620v1_genomic.fna
 reference_annotation: GCF_000756205.1/genomic.gff
 feature_tag: gene  
-gene_id_attribute: gene
+gene_id_attribute: Name
 streaming_chunk_size: 200000
 samples:
   SA_9h:
