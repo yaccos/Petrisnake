@@ -7,7 +7,6 @@ import multiprocessing
 import logging
 import sqlite3
 import sys
-from snakemake.script import snakemake
 
 log_file = snakemake.log[0]
 log_handle  = open(log_file, "w")
